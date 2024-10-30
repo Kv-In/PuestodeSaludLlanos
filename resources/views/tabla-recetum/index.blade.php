@@ -1,0 +1,85 @@
+@extends('adminlte::page')
+
+@section('title', 'Ver Recetas')
+
+@section('template_title')
+    Tabla Receta
+@endsection
+
+@section('content')
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+
+                            <span id="card_title">
+                                {{ __('Tabla Receta') }}
+                            </span>
+
+                             <div class="float-right">
+                                <a href="{{ route('tabla-receta.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Create New') }}
+                                </a>
+                              </div>
+                        </div>
+                    </div>
+                    @if ($message = Session::get('success'))
+                        <div class="alert alert-success m-4">
+                            <p>{{ $message }}</p>
+                        </div>
+                    @endif
+
+                    <div class="card-body bg-white">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>No</th>
+                                        
+									<th >Id Receta</th>
+									<th >Nombre Paciente</th>
+									<th >Dpi Paciente</th>
+									<th >Fecha Emision</th>
+									<th >Contenido Receta</th>
+									<th >Firma</th>
+									<th >Sello</th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($tablaReceta as $tablaRecetum)
+                                        <tr>
+                                            <td>{{ ++$i }}</td>
+                                            
+										<td >{{ $tablaRecetum->id_receta }}</td>
+										<td >{{ $tablaRecetum->consulta->paciente->nombre}}</td>
+										<td >{{ $tablaRecetum->consulta->paciente->dpi_cui }}</td>
+										<td >{{ $tablaRecetum->fecha_emision }}</td>
+										<td >{{ $tablaRecetum->contenido_receta }}</td>
+										<td >{{ $tablaRecetum->firma }}</td>
+										<td >{{ $tablaRecetum->sello }}</td>
+
+                                            <td>
+                                                <form action="{{ route('tabla-receta.destroy', $tablaRecetum->id_receta) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('tabla-receta.show', $tablaRecetum->id_receta) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('tabla-receta.edit', $tablaRecetum->id_receta) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {!! $tablaReceta->withQueryString()->links() !!}
+            </div>
+        </div>
+    </div>
+@endsection
